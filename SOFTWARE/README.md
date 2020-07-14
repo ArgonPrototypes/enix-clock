@@ -1,1 +1,1 @@
-# To be added soon.
+# Firmware for the Enix Clock
