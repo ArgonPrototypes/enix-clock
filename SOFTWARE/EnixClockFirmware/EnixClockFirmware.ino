@@ -103,6 +103,11 @@ uint8_t ledSettingsArray[][4] = {
 
 };
 
+// Keep cathode poisoning in mind when you are increasing durations
+const uint16_t timeModeDuration = 500;
+const uint8_t dateModeDuration = 40;
+const uint8_t temperatureModeDuration = 40;
+
 const uint8_t numLEDModes = sizeof(ledSettingsArray) / sizeof(ledSettingsArray[0]);
 uint8_t ledModeSelect = 0;
 
@@ -267,7 +272,7 @@ void modeHandler()
       {
       case 0:
         handleTimeMode();
-        if (hundredMillisecondCounter % 500 == 0) // 50 seconds
+        if (hundredMillisecondCounter % timeModeDuration == 0)
         {
           turnOffColon();                //turn off the colon
           nixieTransition(3, getDate()); //Transition to Date
@@ -277,7 +282,7 @@ void modeHandler()
         break;
       case 1:
         handleDateMode();
-        if (hundredMillisecondCounter % 40 == 0) // 4 seconds
+        if (hundredMillisecondCounter % dateModeDuration == 0)
         {
           hundredMillisecondCounter = 0;
           nixieTransition(4, getTemperature());
@@ -286,7 +291,7 @@ void modeHandler()
         break;
       case 2:
         handleTemperatureMode();
-        if (hundredMillisecondCounter % 40 == 0) // 4 seconds
+        if (hundredMillisecondCounter % temperatureModeDuration == 0)
         {
           enableDigits = 0b1111;
           hundredMillisecondCounter = 0;
@@ -307,7 +312,7 @@ void modeHandler()
       {
       case 0:
         handleTimeMode();
-        if (hundredMillisecondCounter % 500 == 0) // 50 seconds
+        if (hundredMillisecondCounter % timeModeDuration == 0)
         {
           turnOffColon();                //turn off the colon
           nixieTransition(3, getDate()); //Transition to Date
@@ -317,7 +322,7 @@ void modeHandler()
         break;
       case 1:
         handleDateMode();
-        if (hundredMillisecondCounter % 40 == 0) // 4 seconds
+        if (hundredMillisecondCounter % dateModeDuration == 0)
         {
           hundredMillisecondCounter = 0;
           nixieTransition(1, 0);
@@ -331,7 +336,7 @@ void modeHandler()
       {
       case 0:
         handleTimeMode();
-        if (hundredMillisecondCounter % 500 == 0) // 50 seconds
+        if (hundredMillisecondCounter % timeModeDuration == 0)
         {
           turnOffColon();                       //turn off the colon
           nixieTransition(4, getTemperature()); //Transition to Date
@@ -342,7 +347,7 @@ void modeHandler()
 
       case 2:
         handleTemperatureMode();
-        if (hundredMillisecondCounter % 40 == 0) // 4 seconds
+        if (hundredMillisecondCounter % temperatureModeDuration == 0)
         {
           enableDigits = 0b1111;
           hundredMillisecondCounter = 0;
@@ -354,7 +359,7 @@ void modeHandler()
       break;
     case 4: // Time
       handleTimeMode();
-      if (hundredMillisecondCounter % 500 == 0) // 50 seconds
+      if (hundredMillisecondCounter % timeModeDuration == 0)
       {
         enableDigits = 0b1111;
         hundredMillisecondCounter = 0;
@@ -1463,8 +1468,8 @@ void clearAnodes()
 
 uint8_t setAnodeForCurDigit()
 {
-
   uint8_t currentNumber;
+  
   //Set Anode for current digit
   if (enableDigits == 0b0011)
   {
@@ -1621,6 +1626,7 @@ uint8_t setAnodeLeft2Digits()
   }
   return currentNumber;
 }
+
 void clearBCD()
 {
   //Clear BCD
@@ -1679,4 +1685,3 @@ void setBCD(uint8_t currentNumber)
     break;
   }
 }
-
